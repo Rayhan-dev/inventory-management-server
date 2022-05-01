@@ -28,6 +28,13 @@ async function run() {
       const books =await cursor.toArray();
       res.send(books);
     });
+    // Getting only 6 books for homepage
+    app.get("/limitedBooks",async(req, res) => {
+      const query = {};
+      const cursor = bookCollection.find(query).limit(6);
+      const books =await cursor.toArray();
+      res.send(books);
+    });
   } finally {
   }
 }
