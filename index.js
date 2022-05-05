@@ -50,6 +50,19 @@ async function run() {
       const topBooks =await cursor.toArray();
       res.send(topBooks);
     })
+    //udpadting deliverd value in database
+    app.put("/inventory/:id", async (req, res) => {
+      const itemId = req.params.id;
+      const updatedData = req.body.newItemValue.quantity;
+      const filter = { _id: ObjectId(`${itemId}`) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity: updatedData
+        },
+      };
+      const result = await bookCollection.updateOne(filter, updateDoc,options);
+    })
   } finally {
   }
 }
