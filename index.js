@@ -43,6 +43,13 @@ async function run() {
       const item = await bookCollection.findOne(query);
       res.send(item);
     })
+    //getting items that are more than 50 in stock
+    app.get("/mostInStock", async (req, res) => {
+      const query = { quantity: { $gt : "50" } };
+      const cursor = bookCollection.find(query);
+      const topBooks =await cursor.toArray();
+      res.send(topBooks);
+    })
   } finally {
   }
 }
