@@ -45,7 +45,7 @@ async function run() {
     })
     //getting items that are more than 50 in stock
     app.get("/mostInStock", async (req, res) => {
-      const query = { quantity: { $gt: "50" } };
+      const query = { $or: [{ quantity: { $gt: "50" } }, { quantity: { $gt: 50 } }] }
       const cursor = bookCollection.find(query);
       const topBooks = await cursor.toArray();
       res.send(topBooks);
@@ -74,6 +74,12 @@ async function run() {
       } else {
         console.log("No documents matched the query. Deleted 0 documents.");
       }
+    })
+    //adding new item 
+    app.post("/books", async (req, res) => {
+      const doc = req.body;
+      const result = await bookCollection.insertOne(doc);
+      res.send(result);
     })
   } finally {
   }
