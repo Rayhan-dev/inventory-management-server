@@ -21,19 +21,19 @@ async function run() {
   try {
     await client.connect();
     const bookCollection = client.db("inventoryDB").collection("books");
-      
+
     //GET BOOKS 
-    app.get("/books",async(req, res) => {
+    app.get("/books", async (req, res) => {
       const query = {};
       const cursor = bookCollection.find(query);
-      const books =await cursor.toArray();
+      const books = await cursor.toArray();
       res.send(books);
     });
     // Getting only 6 books for homepage
-    app.get("/limitedBooks",async(req, res) => {
+    app.get("/limitedBooks", async (req, res) => {
       const query = {};
       const cursor = bookCollection.find(query).limit(6);
-      const books =await cursor.toArray();
+      const books = await cursor.toArray();
       res.send(books);
     });
     //getting a single item for showing details
@@ -45,9 +45,9 @@ async function run() {
     })
     //getting items that are more than 50 in stock
     app.get("/mostInStock", async (req, res) => {
-      const query = { quantity: { $gt : "50" } };
+      const query = { quantity: { $gt: "50" } };
       const cursor = bookCollection.find(query);
-      const topBooks =await cursor.toArray();
+      const topBooks = await cursor.toArray();
       res.send(topBooks);
     })
     //udpadting quantity value in database
@@ -61,7 +61,19 @@ async function run() {
           quantity: updatedData
         },
       };
-      const result = await bookCollection.updateOne(filter, updateDoc,options);
+      const result = await bookCollection.updateOne(filter, updateDoc, options);
+    })
+    //deleting a document
+    app.delete("/inventory/:id", async (req, res) => {
+      const itemId = req.params.id;
+      const query = { _id: ObjectId(`${itemId}`) };
+      const result = await bookCollection.deleteOne(query);
+      res.send(result);
+      if (result.deletedCount === 1) {
+        console.log("Successfully deleted one document.");
+      } else {
+        console.log("No documents matched the query. Deleted 0 documents.");
+      }
     })
   } finally {
   }
