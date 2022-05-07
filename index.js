@@ -81,6 +81,14 @@ async function run() {
       const result = await bookCollection.insertOne(doc);
       res.send(result);
     })
+    //filtering by email
+    app.get("/myitems", async (req, res) => {
+      const email = req.query.email;
+      const query = {email:email};
+      const cursor = bookCollection.find(query);
+      const books = await cursor.toArray();
+      res.send(books);
+    });
   } finally {
   }
 }
