@@ -43,9 +43,9 @@ async function run() {
       const item = await bookCollection.findOne(query);
       res.send(item);
     })
-    //getting items that are more than 50 in stock
+    //getting items that are less than 50 in stock
     app.get("/mostInStock", async (req, res) => {
-      const query = { $or: [{ quantity: { $gt: "50" } }, { quantity: { $gt: 50 } }] }
+      const query = { $or: [{ quantity: { $lt: "20" } }, { quantity: { $lt: 20 } }] }
       const cursor = bookCollection.find(query);
       const topBooks = await cursor.toArray();
       res.send(topBooks);
